@@ -76,10 +76,14 @@
             </button>
           </form>
           <!-- Registration Form -->
+          <div class="text-white text-center font-bold p-4 rounded mb-4" v-if="reg_show_alert" :class="bg_alert_variant">
+            {{reg_alert_msg}}
+          </div>
           <vee-form 
             v-show="tab === 'registration'" 
             :validation-schema="schema"
             @submit="register"
+            :initial-values="userData"
           >
             <!-- Name -->
             <div class="mb-3">
@@ -122,12 +126,21 @@
             <div class="mb-3">
               <label class="inline-block mb-2">Password</label>
               <vee-field type="password"
-                id="password"
                 name="password"
+                autocomplete="off"
+                :bails="false"
+                v-slot="{field, errors}"
+              >
+                <input  id="password"
                 class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded"
-                placeholder="Password" 
-                autocomplete="off"/>
+                placeholder="Password"
+                v-bind="field"
+                />
+              <div class="text-red-600" v-for="error in errors" :key="error">
+                  {{error}}
+              </div>
+              </vee-field>
               <ErrorMessage class="text-red-600" name="password" />
             </div>
             <!-- Confirm Password -->
@@ -162,7 +175,7 @@
               <label for="tos" class="inline-block">Accept terms of service</label>
               <ErrorMessage class="text-red-600 block" name="tos" />
             </div>
-            <button type="submit"
+            <button type="submit" :disabled="reg_in_submission"
               class="block w-full bg-purple-600 text-white py-1.5 px-3 rounded transition
                 hover:bg-purple-700">
               Submit
@@ -180,6 +193,13 @@ export default {
     name: 'Auth',
     data() {
       return {
+        userData: {
+          country: 'USA'
+        },
+        reg_in_submission: false,
+        reg_show_alert: false,
+        bg_alert_variant: 'bg-blue-500',
+        reg_alert_msg: 'Please wait! Your process is being created.',
         tab: 'login',
           schema: {
           name: 'required|min:3|max:100|alpha_spaces',
@@ -188,7 +208,7 @@ export default {
           password: 'required|min:3|max:100',
           confirm_password: 'required|confirmed:@password',
           country: 'required',
-          tos: 'required'
+          tos: 'tos'
         }
       }
     },
@@ -200,7 +220,15 @@ export default {
     methods: {
       ...mapMutations(['toggleAuthModal']),
       register(values) {
-        console.log(values)
+        this.reg_show_alert = true;
+        this.reg_in_submission = true;
+        this.bg_alert_variant = 'bg-blue-500';
+        this.reg_alert_msg = "Please wait. your account is being created";
+
+        this.bg_alert_variant = 'bg-green-500';
+        this.reg_alert_msg = "Congrats! Your account has been created";
+
+        console.log('values', values);
       }
     }
 }
