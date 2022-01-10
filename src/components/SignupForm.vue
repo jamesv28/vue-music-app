@@ -106,14 +106,15 @@
 </template>
 
 <script>
+import firebase from '@/includes/firebase';
+
 export default {
     name: 'SignupForm',
     data() {
         return {
             userData: {
           country: 'USA'
-        },
-        
+        },     
         reg_in_submission: false,
         reg_show_alert: false,
         bg_alert_variant: 'bg-blue-500',
@@ -130,16 +131,24 @@ export default {
         }
     },
     methods: {
-        register(values) {
-        this.reg_show_alert = true;
-        this.reg_in_submission = true;
-        this.bg_alert_variant = 'bg-blue-500';
-        this.reg_alert_msg = "Please wait. your account is being created";
-
-        this.bg_alert_variant = 'bg-green-500';
-        this.reg_alert_msg = "Congrats! Your account has been created";
-
-        console.log('values', values);
+        async register(values) {
+            const {email, password} = values;
+            this.reg_show_alert = true;
+            this.reg_in_submission = true;
+            this.bg_alert_variant = 'bg-blue-500';
+            this.reg_alert_msg = "Please wait. your account is being created";
+            let userCredentials = null;
+            try {
+                userCredentials = await firebase.auth().createUserWithEmailAndPassword(values.email, values.password);
+            }
+            catch(err) {
+                this.reg_in_submission = false;
+                this.bg_alert_variant = 'bg-red-500';
+                this.reg_alert_msg = "Something went wrong! Plese try again"
+            }
+            this.bg_alert_variant = 'bg-green-500';
+            this.reg_alert_msg = "Congrats! Your account has been created";
+            console.log('values', values);
       },
     }
 }
