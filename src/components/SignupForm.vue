@@ -92,22 +92,22 @@
               <ErrorMessage class="text-red-600" name="country" />
             </div>
             <!-- artis/listener -->
-            <div class="artist">
-              <label for="artist" class="inline-block mb-2">Artist/Listener?</label>
+            <div class="mb-3">
+              <label class="inline-block mb-2" for="consumer">Artist/Lister?</label>
               <vee-field as="select"
-                id="artist"
-                name="artist"
-                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition mb-2
+                id="consumer"
+                name="customer"
+                class="block w-full py-1.5 px-3 text-gray-800 border border-gray-300 transition
                   duration-500 focus:outline-none focus:border-black rounded">
-                <option value="listener">Listenter</option>
                 <option value="artist">Artist</option>
+                <option value="listener">Listener</option>
               </vee-field>
-              <ErrorMessage class="text-red-600" name="artist" />
+              <ErrorMessage class="text-red-600" name="customer" />
             </div>
             <!-- TOS -->
             <div class="mb-3 pl-6">
-              <vee-field name="tos" value="1" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded"/>
-              <label for="tos" class="inline-block">Accept terms of service</label>
+              <vee-field name="tos" id="tos" value="1" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded"/>
+              <label for="tos" id="tos" class="inline-block">Accept terms of service</label>
               <ErrorMessage class="text-red-600 block" name="tos" />
             </div>
             <button type="submit" :disabled="reg_in_submission"
@@ -127,7 +127,7 @@ export default {
         return {
           userData: {
             country: 'USA',
-            artist: 'listener'
+            customer: 'listener'
         },     
         reg_in_submission: false,
         reg_show_alert: false,
@@ -140,14 +140,14 @@ export default {
           password: 'required|min:3|max:100',
           confirm_password: 'required|confirmed:@password',
           country: 'required',
-          artist: 'required',
+          customer: 'required',
           tos: 'tos'
         },
         }
     },
     methods: {
         async register(values) {
-            const {email, password,name, age, country, listener} = values;
+            const {email, password,name, age, country, customer} = values;
             this.reg_show_alert = true;
             this.reg_in_submission = true;
             this.bg_alert_variant = 'bg-blue-500';
@@ -168,7 +168,7 @@ export default {
                 email,
                 age,
                 country,
-                listener
+                customer
               })
             }
             catch(err) {
@@ -181,7 +181,6 @@ export default {
 
             this.bg_alert_variant = 'bg-green-500';
             this.reg_alert_msg = "Congrats! Your account has been created";
-            console.log('userCred', userCred);
       },
     }
 }
