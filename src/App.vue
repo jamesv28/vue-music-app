@@ -23,6 +23,9 @@ export default {
     Introduction,
     MainContent,
     Player
+  },
+  created() {
+    this.$store.dispatch('init_login')
   }
 }
 </script>

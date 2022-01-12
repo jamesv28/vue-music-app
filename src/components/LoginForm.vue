@@ -50,22 +50,31 @@ export default {
             login_alert_msg: 'Please wait! Your login is being processed',
             bg_alert_variant: 'bg-blue-500',
             loginSchema: {
-            email: 'required|min:3|max:100|email',
-            password: 'required|min:3|max:100'
+              email: 'required|min:3|max:100|email',
+              password: 'required|min:3|max:100'
             }
         }
     },
     methods: {
-        signin(values) {
+        async signin(values) {
         this.login_show_alert = true;
         this.login_in_submission = true;
         this.bg_alert_variant = 'bg-blue-500';
         this.login_alert_msg = "Please wait. your account is being created";
 
+        try {
+          await this.$store.dispatch('login', values);
+        }
+        catch(err) {
+          this.login_in_submission = false;
+          this.bg_alert_variant = 'bg-red-500';
+          this.login_alert_msg = 'Invalid login details';
+          console.log('error', err);
+          return;
+        }
         this.bg_alert_variant = 'bg-green-500';
         this.login_alert_msg = "Congrats! Your account has been created";
 
-        console.log('values', values);
       }
     }
 }

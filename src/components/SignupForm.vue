@@ -106,8 +106,8 @@
             </div>
             <!-- TOS -->
             <div class="mb-3 pl-6">
-              <vee-field name="tos" id="tos" value="1" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded"/>
-              <label for="tos" id="tos" class="inline-block">Accept terms of service</label>
+              <vee-field name="tos" id="tos-label" value="1" type="checkbox" class="w-4 h-4 float-left -ml-6 mt-1 rounded"/>
+              <label for="tos-label" class="inline-block">Accept terms of service</label>
               <ErrorMessage class="text-red-600 block" name="tos" />
             </div>
             <button type="submit" :disabled="reg_in_submission"
@@ -119,7 +119,6 @@
 </template>
 
 <script>
-import {auth, usersCollection} from '@/includes/firebase';
 
 export default {
     name: 'SignupForm',
@@ -147,14 +146,12 @@ export default {
     },
     methods: {
         async register(values) {
-            const {email, password,name, age, country, customer} = values;
             this.reg_show_alert = true;
             this.reg_in_submission = true;
             this.bg_alert_variant = 'bg-blue-500';
             this.reg_alert_msg = "Please wait. your account is being created";
-            let userCred = null;
             try {
-                userCred = await auth.createUserWithEmailAndPassword(values.email, values.password);
+              await this.$store.dispatch('register', values)
             }
             catch(err) {
                 this.reg_in_submission = false;
@@ -162,23 +159,7 @@ export default {
                 this.reg_alert_msg = "Something went wrong! Plese try again later.";
                 return;
             }
-            try {
-              await usersCollection.add({
-                name,
-                email,
-                age,
-                country,
-                customer
-              })
-            }
-            catch(err) {
-              this.reg_in_submission = false;
-              this.bg_alert_variant = 'bg-red-500';
-              this.reg_alert_msg = "Something went wrong! Plese try again later.";
-              console.log(err);
-              return;
-            }
-
+            
             this.bg_alert_variant = 'bg-green-500';
             this.reg_alert_msg = "Congrats! Your account has been created";
       },
