@@ -74,7 +74,7 @@ export default {
         }
         this.bg_alert_variant = 'bg-green-500';
         this.login_alert_msg = "Congrats! Your account has been created";
-
+        window.location.reload();
       }
     }
 }
