@@ -1,8 +1,7 @@
 <template>
   <div>
     <app-header />
-    <introduction />
-    <main-content />
+    <router-view></router-view>
     <player />
     <auth />
   </div>
