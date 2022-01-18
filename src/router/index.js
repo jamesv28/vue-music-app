@@ -3,6 +3,7 @@ import HomeView from '@/views/HomeView.vue';
 import AboutView from '@/views/AboutView.vue';
 import ManageView from '@/views/ManageView.vue';
 import PageNotFound from '@/views/PageNotFound.vue';
+import store from '@/store';
 
 const routes = [
     {
@@ -18,7 +19,10 @@ const routes = [
     {
       name: 'manage',
       path: '/manage',
-      component: ManageView
+      component: ManageView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       path: '/manage-music',
@@ -27,8 +31,7 @@ const routes = [
     {
       path: '/:catchAll(.*)*',
       component: PageNotFound
-    }
-    
+    }  
 ]
 
 const router = createRouter({
@@ -37,4 +40,17 @@ const router = createRouter({
   linkExactActiveClass: 'text-yellow-500'
 })
 
+router.beforeEach((to,from, next) => {
+  if(to.matched.some((record) => record.meta.requiresAuth)) {
+    next();
+    return;
+  }
+  if(store.$state.userLoggedIn) {
+    next();
+  } else {
+    next({
+      name: 'home'
+    })
+  }
+});
 export default router
