@@ -50,13 +50,13 @@
                   </div>
                   <button
                     type="submit"
-                    class="py-1.5 px-3 rounded text-white bg-emerald-600"
+                    class="py-1.5 px-3 rounded text-white bg-indigo-500"
                   >
                     Submit
                   </button>
                   <button
                     type="button"
-                    class="py-1.5 px-3 rounded text-white bg-gray-600"
+                    class="py-1.5 px-3 rounded text-white bg-purple-500"
                   >
                     Go Back
                   </button>

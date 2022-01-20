@@ -37,7 +37,7 @@ const routes = [
 const router = createRouter({
   history: createWebHashHistory(),
   routes,
-  linkExactActiveClass: 'text-yellow-500'
+  linkExactActiveClass: 'text-yellow-200'
 })
 
 router.beforeEach((to,from, next) => {

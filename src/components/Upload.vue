@@ -24,7 +24,9 @@
             <hr class="my-6" />
             <div class="mb-4" v-for="upload in uploads" :key="upload.name">
               <!-- File Name -->
-              <div class="font-bold text-sm">{{upload.name}}</div>
+              <div class="font-bold text-sm" :class="upload.text_class">
+                  <i :class="upload.icon"></i>{{upload.name}}
+                </div>
               <div class="flex h-4 overflow-hidden bg-gray-200 rounded">
                 <!-- Inner Progress Bar -->
                 <div
@@ -39,7 +41,7 @@
 </template>
 
 <script>
-import {storage} from '@/includes/firebase';
+import {storage,auth, songsCollection} from '@/includes/firebase';
 
 export default {
     name: 'Upload',
@@ -63,12 +65,37 @@ export default {
                     task,
                     current_progress: 0,
                     name: file.name,
-                    variant: 'bg-indigo-500'
+                    variant: 'bg-indigo-500',
+                    icon: 'fas fa-spinner fa-spin',
+                    text_class: '',
                 }) - 1;
 
                 task.on('state_changed', (snapshot) => {
                     const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                     this.uploads[updateIndex].current_progress = progress;
+                }, (err) => {
+                    this.uploads[updateIndex].variant = 'bg-red-400';
+                    this.uploads[updateIndex].icon = 'fas fa-times';
+                    this.uploads[updateIndex].text_class = 'text-red-400';
+                    console.log('error', err);
+                }, async () => {
+                    const songUrl = await task.snapshot.ref.getDownloadURL();
+
+                    const song = {
+                        uid: auth.currentUser.uid,
+                        displayName: auth.currentUser.displayName,
+                        originalName: task.snapshot.ref.name,
+                        modifiedName: task.snapshot.ref.name,
+                        genre: '',
+                        commentCount: 0,
+                        url: songUrl
+                    }
+
+                    await songsCollection.add(song);
+                    this.uploads[updateIndex].variant = 'bg-emerald-500';
+                    this.uploads[updateIndex].icon = 'fas fa-check';
+                    this.uploads[updateIndex].text_class = 'text-emerald-500';
+
                 })
             })
             console.log('files', files);  
