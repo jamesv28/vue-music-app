@@ -14,7 +14,10 @@ const routes = [
     {
       name: 'about',
       path: '/about',
-      component: AboutView
+      component: AboutView,
+      meta: {
+        requiresAuth: true
+      }
     },
     {
       name: 'manage',
@@ -45,7 +48,7 @@ router.beforeEach((to,from, next) => {
     next();
     return;
   }
-  if(store.$state.userLoggedIn) {
+  if(store.state.userLoggedIn) {
     next();
   } else {
     next({

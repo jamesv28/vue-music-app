@@ -19,8 +19,10 @@
               @dragleave.prevent.stop="isDragOver = false"
               @drop.prevent.stop="upload($event)"
             >
-              <h5>Drop your files here</h5>
+              <!-- <h5>Drop your files here</h5> -->
             </div>
+            <input type="file" multiple @change="upload($event)"/>
+
             <hr class="my-6" />
             <div class="mb-4" v-for="upload in uploads" :key="upload.name">
               <!-- File Name -->
@@ -54,7 +56,9 @@ export default {
     methods: {
         upload($event) {
             this.isDragOver = false;
-            const files = [...$event.dataTransfer.files]
+            const files = $event.dataTransfer
+              ? [...$event.dataTransfer.files]
+            : [...$event.target.files];   
             files.forEach(file => {
                 if(file.type !== 'audio/mpeg') return;
                 const storageRef = storage.ref();
@@ -99,7 +103,17 @@ export default {
                 })
             })
             console.log('files', files);  
-        }
+        },
+        // cancelUploads() {
+        //   this.uploads.foreEach((upload) => {
+        //     upload.task.cancel();
+        //   })
+        // }
+        beforeUnmount() {
+          this.uploads.foreEach((upload) => {
+            upload.task.cancel();
+          })
+        },
     }
 }
 </script>
