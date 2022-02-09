@@ -2,7 +2,7 @@
   <section class="container mx-auto mt-6">
     <div class="md:grid md:grid-cols-3 md:gap-4">
       <div class="col-span-1">
-        <upload ref="upload"/>
+        <upload :addSong="addSong" ref="upload"/>
       </div>
       <div class="col-span-2">
         <div
@@ -18,6 +18,7 @@
             <!-- Composition Items -->
             <composition-item 
               v-for="(song,i) in songs" 
+              :removeSong="removeSong"
               :song="song" 
               :key="song.docId"
               :updateSong="updateSong"
@@ -48,18 +49,22 @@ export default {
   },
   async created() {
     const snapshot = await songsCollection.where('uid', '==',auth.currentUser.uid ).get() ;
-    snapshot.forEach((doc) => {
-      const song = {
-        ...doc.data(),
-        docId: doc.id
-      }
-      this.songs.push(song)
-    })
+    snapshot.forEach(this.addSong);
   },
   methods: {
     updateSong(i, values) {
       this.songs[i].modifiedName = values.modifiedName;
       this.songs[i].genre = values.genre;
+    },
+    removeSong(i) {
+      this.songs.splice(i,1)
+    },
+    addSong(doc) {
+      const song = {
+        ...doc.data(),
+        docId: doc.id
+      }
+      this.songs.push(song)
     }
   },
   // beforeRouteEnter(to, from , leave) {
