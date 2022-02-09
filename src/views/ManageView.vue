@@ -23,6 +23,7 @@
               :key="song.docId"
               :updateSong="updateSong"
               :index="i"
+              :updateUnsavedFlag="updateUnsavedFlag"
             />
           </div>
         </div>
@@ -41,7 +42,8 @@ export default {
   name: 'ManageView',
   data() {
     return {
-      songs: []
+      songs: [],
+      unsavedFlag: false
     }
   },
   components: {
@@ -65,6 +67,18 @@ export default {
         docId: doc.id
       }
       this.songs.push(song)
+    },
+    updateUnsavedFlag(value) {
+      this.unsavedFlag = value
+    }
+  },
+  beforeRouteLeave(to, from, leave) {
+    if(!this.unsavedFlag) {
+       next();
+    }
+    else {
+      const leave = confirm('You have unsaved changes. Are you sure you want to leave?');
+      next(leave)
     }
   },
   // beforeRouteEnter(to, from , leave) {
