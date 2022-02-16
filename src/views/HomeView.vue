@@ -33,9 +33,9 @@
           :key="song.docId"
         ></song-item>   
       </ol>
-      <!-- .. end Playlist -->
     </div>
   </section>
+
 </template>
 
 <script>
@@ -46,15 +46,16 @@ export default {
   name: 'HomeView',
   data() {
     return {
-      songs: []
+      songs: [],
+      maxPerPage: 3,
+      pendingRequest: false
     }
   },
   components: {
     SongItem
   },
-  async created() {
+    async created() {
     const snapshots = await songsCollection.get();
-
     snapshots.forEach((doc) => {
       this.songs.push({
         docId: doc.id,
@@ -62,5 +63,6 @@ export default {
       })
     });
   }
+  
 }
 </script>

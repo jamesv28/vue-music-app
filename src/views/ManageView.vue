@@ -72,7 +72,7 @@ export default {
       this.unsavedFlag = value
     }
   },
-  beforeRouteLeave(to, from, leave) {
+  beforeRouteLeave(to, from, next) {
     if(!this.unsavedFlag) {
        next();
     }

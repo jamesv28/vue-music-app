@@ -2,7 +2,6 @@
   <div>
     <app-header />
     <router-view></router-view>
-    <player />
     <auth />
   </div>
 </template>
